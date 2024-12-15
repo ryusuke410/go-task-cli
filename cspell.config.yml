@@ -1,0 +1,61 @@
+---
+$schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
+version: '0.2'
+dictionaryDefinitions:
+  - name: project-words
+    path: './cspell/project-words.txt'
+    addWords: true
+dictionaries:
+  - project-words
+ignorePaths:
+  - 'node_modules'
+  - '.next'
+  - '.turbo'
+  - '/cspell.config.yml'
+  - '/cspell/project-words.txt'
+  - 'mocks/'
+  - 'mock*.*'
+  - '*.svg'
+  - '*.png'
+  - '*.jpg'
+  - '*.jpeg'
+  - '**/prisma/generated/'
+  - 'coverage'
+  - 'pnpm-lock.yaml'
+  # - '**/*.css'
+  - 'logs'
+  - '*.log'
+  - '*.llog'
+ignoreRegExpList:
+  - Urls
+  - Email
+  - Base64MultiLine
+  - Base64SingleLine
+  - CommitHash
+  - CommitHashLink
+  - CStyleHexValue
+  - CSSHexValue
+  - SHA
+  - HashStrings
+  - UnicodeRef
+  - UUID
+  - >-
+    /0x[0-9a-zA-Z]*/g
+  - >-
+    /ipfs:.+/g
+  - >-
+    /SenderId.+/g
+  - >-
+    /[tT]oken.+/g
+  - >-
+    /receiptHandle.+/g
+  - >-
+    /Bearer.+/g
+  - >-
+    /password.+/gi
+  - >-
+    /github\.com.+/g
+  - >-
+    /TODO.+/g
+  - >-
+    /FIXME.+/g

@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  default:
+    desc: task list
+    cmds:
+      - ./task-bin/task --list
+    silent: true
+
+includes:
+  cspell:
+    dir: ./cspell
+    taskfile: ./cspell/Taskfile.yml

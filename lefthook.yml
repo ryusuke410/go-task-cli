@@ -1,0 +1,7 @@
+pre-commit:
+  parallel: true
+  commands:
+    cspell-lint:
+      run: ./task-bin/task cspell:lint
+    cspell-format-project-words-txt:
+      run: ./task-bin/task cspell:format-project-words-txt

@@ -1,0 +1,16 @@
+version: '3'
+
+tasks:
+  format-project-words-txt:
+    desc: Sort project-words.txt
+    vars:
+      wordsFile: './project-words.txt'
+    cmds:
+      - |
+        if [ -f "{{.wordsFile}}" ]; then
+          LC_ALL=C sort -fu "{{.wordsFile}}" -o "{{.wordsFile}}"
+        fi
+  lint:
+    desc: cspell lint
+    cmds:
+      - npm exec cspell --gitignore --no-progress --no-summary --show-suggestions lint '**'
