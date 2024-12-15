@@ -1,0 +1,27 @@
+{
+  "name": "@ryusuke410/go-task-cli",
+  "version": "0.0.0",
+  "description": "This package install go-task (taskfile) locally.",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node scripts/init.cjs",
+    "build": "tsup ./src/install.ts --out-dir ./build --config ./tsconfig.json --external @ryusuke410/go-task-cli"
+  },
+  "bin": {
+    "task": "./bin/task.cjs"
+  },
+  "files": [
+    "build",
+    "dummy",
+    "scripts"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT OR Apache-2.0",
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}

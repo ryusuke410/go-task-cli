@@ -1,8 +1,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-const readme = require.resolve("@ryusuke410/go-task-cli/README.md");
-const packageRoot = path.dirname(readme);
+const packageJsonPath = require.resolve("@ryusuke410/go-task-cli/package.json");
+const packageRoot = path.dirname(packageJsonPath);
 const binDir = path.join(packageRoot, "task-bin");
 if (!fs.existsSync(binDir)) {
   fs.mkdirSync(binDir, { recursive: true });
