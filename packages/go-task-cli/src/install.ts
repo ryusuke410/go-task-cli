@@ -1,23 +1,87 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-const packageJsonPath = require.resolve("@ryusuke410/go-task-cli/package.json");
-const packageRoot = path.dirname(packageJsonPath);
-const binDir = path.join(packageRoot, "task-bin");
-if (!fs.existsSync(binDir)) {
-  fs.mkdirSync(binDir, { recursive: true });
-  console.log(`Created directory: ${binDir}`);
-} else {
-  console.log(`Directory already exists: ${binDir}`);
+import * as tar from 'tar';
+
+import { goArchOfNode, goOsOfNode } from "./go";
+import { TempDir } from "./temp-dir";
+import { hashSha256Verify } from "./hash";
+import { downloadFile } from "./download";
+
+const mainBare = async () => {
+  const packageJsonPath = require.resolve(
+    "@ryusuke410/go-task-cli/package.json"
+  );
+  const packageRoot = path.dirname(packageJsonPath);
+  const binDir = path.join(packageRoot, "task-bin");
+  ensureDirSync(binDir);
+
+  const { version } = readPackageJson(packageJsonPath);
+  await installTaskBinary(version, binDir);
+};
+
+const installTaskBinary = async (version: string, targetDir: string) => {
+  const owner = "go-task";
+  const repo = "task";
+  const binary = "task";
+  const format = "tar.gz";
+  const os = goOsOfNode(process.platform);
+  const arch = goArchOfNode(process.arch);
+  const githubDownload = `https://github.com/${owner}/${repo}/releases/download`;
+  const name = `${binary}_${os}_${arch}`;
+  const tarball = `${name}.${format}`;
+  const tarballUrl = `${githubDownload}/v${version}/${tarball}`;
+  const checksum = `${binary}_checksums.txt`;
+  const checksumUrl = `${githubDownload}/v${version}/${checksum}`;
+
+  await using tempDir = await TempDir.create("task-");
+  const tempTarball = path.join(tempDir.path, tarball);
+  const tempChecksum = path.join(tempDir.path, checksum);
+  await Promise.all([downloadFile(tarballUrl, tempTarball), downloadFile(checksumUrl, tempChecksum)]);
+  hashSha256Verify(tempTarball, tempChecksum);
+  const extractTempDir = path.join(tempDir.path, "extract");
+  ensureDirSync(extractTempDir);
+  await extractAndMove(tempTarball, extractTempDir, targetDir);
+};
+
+const extractAndMove = async (tarGzFilePath: string, tempDir: string, targetDir: string) => {
+  await tar.x({
+    file: tarGzFilePath,
+    cwd: tempDir,
+  });
+
+  const files = fs.readdirSync(tempDir);
+  for (const file of files) {
+      const src = path.join(tempDir, file);
+      const dest = path.join(targetDir, file);
+
+      fs.renameSync(src, dest);
+  }
 }
 
-const sourceFile = path.join(packageRoot, "dummy", "dummy-bin.sh");
-const destinationFile = path.join(binDir, "dummy-bin.sh");
+type PackageJson = {
+  version: string;
+};
 
-if (fs.existsSync(sourceFile)) {
-  fs.copyFileSync(sourceFile, destinationFile);
-  console.log(`Copied ${sourceFile} to ${destinationFile}`);
-} else {
-  console.error(`Source file does not exist: ${sourceFile}`);
-  process.exit(1);
-}
+const readPackageJson = (filePath: string): PackageJson => {
+  const content = fs.readFileSync(filePath, "utf-8");
+  return JSON.parse(content);
+};
+
+const ensureDirSync = (path: string) => {
+  if (fs.existsSync(path)) {
+    return;
+  }
+  fs.mkdirSync(path, { recursive: true });
+};
+
+const main = async () => {
+  try {
+    await mainBare();
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+main();

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const { env, version, release } = process;
 
-const binPath = "@ryusuke410/go-task-cli/task-bin/dummy-bin.sh";
+const binPath = "@ryusuke410/go-task-cli/task-bin/task";
 
 if (binPath) {
 	const packageManager = detectPackageManager();

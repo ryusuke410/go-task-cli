@@ -12,3 +12,7 @@ Taskfile
 taskflie
 vuepress
 wscript
+GOARCH
+mktemp
+gaxios
+tsup

@@ -1,0 +1,48 @@
+version: '3'
+
+tasks:
+  build:
+    desc: build
+    deps:
+      - clean
+    cmds:
+      - npm exec -- tsup ./src/install.ts --out-dir ./build --config ./tsconfig.json --no-external --external @ryusuke410/go-task-cli
+  clean:
+    desc: clean
+    cmds:
+      - rm -rf ./build
+  build-and-pack:
+    desc: build and pack
+    deps:
+      - build
+    cmds:
+      - mkdir -p {{.releasesDir}}
+      - npm pack --pack-destination {{.releasesDir}}
+  run-tests:
+    desc: run tests
+    deps:
+      - build-and-pack
+      - init-tests-work-space
+    cmds:
+      - cp -r ./tests/go-task-cli-test {{.testsWorkSpace}}/
+      - task: run-tests-body
+
+  run-tests-body:
+    internal: true
+    dir: '{{.testsWorkSpace}}/go-task-cli-test'
+    cmds:
+      - npm install
+      - npm install --save-dev "{{.packageTarGz}}"
+  init-tests-work-space:
+    internal: true
+    cmds:
+      - rm -rf {{.testsWorkSpace}}
+      - mkdir -p {{.testsWorkSpace}}
+
+vars:
+  releasesDir: './releases'
+  testsWorkSpace: './tests-work-space'
+  packageJsonText:
+    sh: cat ./package.json
+  packageVersion: '{{(mustFromJson .packageJsonText).version}}'
+  packageTarGz: '{{.TASKFILE_DIR}}/{{.releasesDir}}/ryusuke410-go-task-cli-{{.packageVersion}}.tgz'

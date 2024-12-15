@@ -15,6 +15,7 @@ ignorePaths:
   - '/cspell/project-words.txt'
   - 'mocks/'
   - 'mock*.*'
+  - 'build'
   - '*.svg'
   - '*.png'
   - '*.jpg'

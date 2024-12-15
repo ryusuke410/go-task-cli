@@ -1,0 +1,24 @@
+{
+  "name": "@ryusuke410/setup-go-task-cli",
+  "version": "1.0.0",
+  "description": "This package setup a package in your project to install Task (Taskfile) locally.",
+  "scripts": {
+    "build": "tsup ./src/install.ts --out-dir ./build --config ./tsconfig.json --external @ryusuke410/go-task-cli"
+  },
+  "bin": {
+    "task": "./build/setup.js"
+  },
+  "files": [
+    "build"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT OR Apache-2.0",
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

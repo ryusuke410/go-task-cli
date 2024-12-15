@@ -1,6 +1,6 @@
 # go-task-cli
 
-This package install go-task (taskfile) locally.
+This package install Task (Taskfile) locally.
 
 ## usage
 

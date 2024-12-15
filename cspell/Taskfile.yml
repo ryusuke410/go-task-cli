@@ -12,5 +12,6 @@ tasks:
         fi
   lint:
     desc: cspell lint
+    dir: ..
     cmds:
-      - npm exec cspell --gitignore --no-progress --no-summary --show-suggestions lint '**'
+      - npm exec -- cspell --gitignore --no-progress --no-summary --show-suggestions lint '**'

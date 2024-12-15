@@ -11,3 +11,6 @@ includes:
   cspell:
     dir: ./cspell
     taskfile: ./cspell/Taskfile.yml
+  cli:
+    dir: ./packages/go-task-cli
+    taskfile: ./packages/go-task-cli/Taskfile.yml
