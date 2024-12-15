@@ -1,0 +1,19 @@
+{
+  "name": "go-task-cli-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "lefthook install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT OR Apache-2.0",
+  "devDependencies": {
+    "cspell": "^8.16.1",
+    "lefthook": "^1.9.2",
+    "go-task-cli": "file:./dev-packages/go-task-cli"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
