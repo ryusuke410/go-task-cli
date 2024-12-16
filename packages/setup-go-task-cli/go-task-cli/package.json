@@ -1,0 +1,19 @@
+{
+  "name": "go-task-cli",
+  "version": "0.0.0",
+  "description": "This package setup a package in your project to install Task (Taskfile) locally.",
+  "private": true,
+  "scripts": {
+    "postinstall": "node scripts/init.cjs"
+  },
+  "bin": {
+    "task": "./bin/task.cjs"
+  },
+  "files": [
+    "build",
+    "scripts"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT OR Apache-2.0"
+}

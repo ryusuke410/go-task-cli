@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as fs from "node:fs";
 import * as path from "node:path";
 
@@ -39,25 +41,11 @@ const installTaskBinary = async (version: string, targetDir: string) => {
   const tempChecksum = path.join(tempDir.path, checksum);
   await Promise.all([downloadFile(tarballUrl, tempTarball), downloadFile(checksumUrl, tempChecksum)]);
   hashSha256Verify(tempTarball, tempChecksum);
-  const extractTempDir = path.join(tempDir.path, "extract");
-  ensureDirSync(extractTempDir);
-  await extractAndMove(tempTarball, extractTempDir, targetDir);
-};
-
-const extractAndMove = async (tarGzFilePath: string, tempDir: string, targetDir: string) => {
   await tar.x({
-    file: tarGzFilePath,
-    cwd: tempDir,
+    file: tempTarball,
+    cwd: targetDir,
   });
-
-  const files = fs.readdirSync(tempDir);
-  for (const file of files) {
-      const src = path.join(tempDir, file);
-      const dest = path.join(targetDir, file);
-
-      fs.renameSync(src, dest);
-  }
-}
+};
 
 type PackageJson = {
   version: string;

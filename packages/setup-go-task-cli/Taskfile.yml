@@ -1,0 +1,66 @@
+version: '3'
+
+tasks:
+  build:
+    desc: build
+    deps:
+      - clean
+    cmds:
+      - npm exec -- tsup ./src/cli.ts --out-dir ./build --config ./tsconfig.json --no-external --external @ryusuke410/setup-go-task-cli
+  clean:
+    desc: clean
+    cmds:
+      - rm -rf ./build
+  build-and-pack:
+    desc: build and pack
+    deps:
+      - build
+    cmds:
+      - mkdir -p {{.releasesDir}}
+      - npm pack --pack-destination {{.releasesDir}}
+  update-go-task-cli:
+    desc: update go-task-cli
+    cmds:
+      - rm -rf ./go-task-cli
+      - task: go-task-cli:build-and-pack
+      - task: unpack
+      - cp go-task-cli/package.json src/go-task-cli-package.json
+      - cp override/* ./go-task-cli
+  link:
+    desc: link this package
+    dir: '{{.releasesDir}}'
+    cmds:
+      - rm -rf package
+      - tar -xf {{.packageTarGz}}
+      - task: link-internal
+  unlink:
+    desc: unlink this package
+    preconditions:
+      - sh: "[ -d '.{{.releasesDir}}/package' ]"
+    cmds:
+      - task: unlink-internal
+
+  unpack:
+    internal: true
+    cmds:
+      - npm exec -- tsx ./scripts/unpack.ts
+  link-internal:
+    internal: true
+    dir: '{{.releasesDir}}/package'
+    cmds:
+      - npm unlink
+      - npm link
+  unlink-internal:
+    internal: true
+    dir: '{{.releasesDir}}/package'
+    cmds:
+      - npm unlink
+
+includes:
+  go-task-cli:
+    dir: ../go-task-cli
+    taskfile: ../go-task-cli/Taskfile.yml
+    internal: true
+  # NOTE: 変数を最後に include することで、他の include に変数空間を壊されないようにする
+  vars:
+    taskfile: ./Taskfile.vars.yml

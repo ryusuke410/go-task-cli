@@ -4,6 +4,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "incremental": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*"
