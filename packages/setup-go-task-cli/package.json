@@ -1,0 +1,29 @@
+{
+  "name": "@ryusuke410/setup-go-task-cli",
+  "version": "1.0.0",
+  "description": "This package setup a package in your project to install Task (Taskfile) locally.",
+  "bin": {
+    "setup-go-task-cli": "./build/cli.js"
+  },
+  "files": [
+    "build",
+    "go-task-cli"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT OR Apache-2.0",
+  "devDependencies": {
+    "@inquirer/prompts": "^7.2.0",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^22.10.2",
+    "consola": "^3.2.3",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^12.2.0",
+    "tar": "^7.4.3",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

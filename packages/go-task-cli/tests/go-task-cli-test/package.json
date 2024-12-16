@@ -1,0 +1,10 @@
+{
+  "name": "go-task-cli-test",
+  "version": "0.0.0",
+  "keywords": [],
+  "author": "",
+  "license": "MIT OR Apache-2.0",
+  "description": "",
+  "dependencies": {
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@ryusuke410/go-task-cli",
+  "version": "3.40.1",
+  "description": "This package installs Task (Taskfile) locally.",
+  "files": [
+    "build"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT OR Apache-2.0",
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.10.2",
+    "dax-sh": "^0.42.0",
+    "fs-extra": "^11.2.0",
+    "gaxios": "^6.7.1",
+    "tar": "^7.4.3",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "zod": "^3.24.1"
+  },
+  "scripts": {
+    "postinstall": "node build/install.js"
+  },
+  "bin": {
+    "task": "./bin/task.cjs"
+  }
+}
