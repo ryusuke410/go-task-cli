@@ -1,6 +1,6 @@
 {
   "name": "@ryusuke410/setup-go-task-cli",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "This package setup a package in your project to install Task (Taskfile) locally.",
   "bin": {
     "setup-go-task-cli": "./build/cli.js"
@@ -9,7 +9,14 @@
     "build",
     "go-task-cli"
   ],
-  "keywords": [],
+  "keywords": [
+    "task",
+    "taskfile",
+    "build-tool",
+    "task-runner",
+    "make",
+    "makefile"
+  ],
   "author": "",
   "license": "MIT OR Apache-2.0",
   "devDependencies": {
