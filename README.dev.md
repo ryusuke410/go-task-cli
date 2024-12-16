@@ -6,6 +6,34 @@
 npm install --frozen-lockfile
 ```
 
+## go-task-cli
+
+### build
+
+```sh
+# build and pack
+(cd packages/go-task-cli/ && npx task build-and-pack)
+
+# build and pack with specific version
+(cd packages/go-task-cli/ && npx task build-and-pack-with-version -- 3.40.1-gtc.1)
+```
+
+### test
+
+```sh
+(cd packages/go-task-cli/ && npx task run-tests)
+```
+
+### publish go-task-cli
+
+```sh
+# publish
+(cd packages/go-task-cli/ && npx task publish)
+
+# publish with specific version
+(cd packages/go-task-cli/ && npx task publish-with-version -- 3.40.1-gtc.1)
+```
+
 ## setup-go-task-cli
 
 ### build and link
@@ -34,7 +62,7 @@ npx @ryusuke410/setup-go-task-cli
 (cd packages/setup-go-task-cli/ && npx task update-go-task-cli)
 ```
 
-### publish
+### publish setup-go-task-cli
 
 ```sh
 (cd packages/setup-go-task-cli/ && npx task publish)

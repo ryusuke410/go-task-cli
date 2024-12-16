@@ -10,7 +10,7 @@ export class PackageJsonOverride {
     this.originalText = originalText;
   }
 
-  static async create(packagePath: string): Promise<PackageJsonOverride> {
+  static async create(packagePath: string, versionOverride?: string): Promise<PackageJsonOverride> {
     const originalText = await fs.readFile(path.join(packagePath, "package.json"), "utf-8");
     const packageJsonOverride = new PackageJsonOverride(packagePath, originalText);
     const originalData = JSON.parse(originalText);
@@ -19,6 +19,9 @@ export class PackageJsonOverride {
       ...originalData,
       ...overrideData,
     };
+    if (versionOverride) {
+      data.version = versionOverride;
+    }
     try {
       await fs.writeJSON(path.join(packagePath, "package.json"), data, { spaces: 2 });
     } catch (error) {
