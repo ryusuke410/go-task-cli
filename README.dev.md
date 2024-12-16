@@ -33,3 +33,9 @@ npx @ryusuke410/setup-go-task-cli
 ```sh
 (cd packages/setup-go-task-cli/ && ../../task-bin/task update-go-task-cli)
 ```
+
+### publish
+
+```sh
+(cd packages/setup-go-task-cli/ && ../../task-bin/task update-go-task-cli)
+```

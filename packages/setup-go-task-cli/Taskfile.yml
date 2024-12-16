@@ -16,8 +16,8 @@ tasks:
     deps:
       - build
     cmds:
-      - mkdir -p {{.releasesDir}}
-      - npm pack --pack-destination {{.releasesDir}}
+      - mkdir -p {{.setupGoTaskCli_releasesDir}}
+      - npm pack --pack-destination {{.setupGoTaskCli_releasesDir}}
   update-go-task-cli:
     desc: update go-task-cli
     cmds:
@@ -28,39 +28,65 @@ tasks:
       - cp override/* ./go-task-cli
   link:
     desc: link this package
-    dir: '{{.releasesDir}}'
+    dir: '{{.setupGoTaskCli_releasesDir}}'
     cmds:
       - rm -rf package
-      - tar -xf {{.packageTarGz}}
+      - tar -xf {{.setupGoTaskCli_packageTarGz}}
       - task: link-internal
   unlink:
     desc: unlink this package
     preconditions:
-      - sh: "[ -d '.{{.releasesDir}}/package' ]"
+      - sh: "[ -d '.{{.setupGoTaskCli_releasesDir}}/package' ]"
     cmds:
       - task: unlink-internal
+  publish-dry-run:
+      - task: build-and-pack
+      - echo "content of package:"
+      - task: publish-dry-run-internal
+  publish:
+    desc: publish
+    cmds:
+      - task: build
+      - npm publish --access public
 
   unpack:
     internal: true
+    silent: true
     cmds:
       - npm exec -- tsx ./scripts/unpack.ts
   link-internal:
     internal: true
-    dir: '{{.releasesDir}}/package'
+    silent: true
+    dir: '{{.setupGoTaskCli_releasesDir}}/package'
     cmds:
       - npm unlink
       - npm link
   unlink-internal:
     internal: true
-    dir: '{{.releasesDir}}/package'
+    silent: true
+    dir: '{{.setupGoTaskCli_releasesDir}}/package'
     cmds:
       - npm unlink
+  publish-dry-run-internal:
+    internal: false
+    silent: true
+    vars:
+      fileList:
+        sh: echo -n "$(tar -tf "{{.setupGoTaskCli_packageTarGz}}")"
+    indent: 4
+    cmds:
+      - echo '{{indent 4 .fileList}}'
 
 includes:
   go-task-cli:
     dir: ../go-task-cli
     taskfile: ../go-task-cli/Taskfile.yml
     internal: true
-  # NOTE: 変数を最後に include することで、他の include に変数空間を壊されないようにする
-  vars:
-    taskfile: ./Taskfile.vars.yml
+
+# NOTE: vars cannot be defined locally
+vars:
+  setupGoTaskCli_releasesDir: './releases'
+  setupGoTaskCli_packageJsonText:
+    sh: cat ./package.json
+  setupGoTaskCli_packageVersion: '{{(mustFromJson .setupGoTaskCli_packageJsonText).version}}'
+  setupGoTaskCli_packageTarGz: '{{.TASKFILE_DIR}}/{{.setupGoTaskCli_releasesDir}}/ryusuke410-setup-go-task-cli-{{.setupGoTaskCli_packageVersion}}.tgz'

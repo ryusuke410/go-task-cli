@@ -14,7 +14,7 @@ stylelintcache
 Taskfile
 taskflie
 tsup
-vuepress
-wscript
 usecase
 usecases
+vuepress
+wscript

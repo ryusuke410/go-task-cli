@@ -16,30 +16,36 @@ tasks:
     deps:
       - build
     cmds:
-      - mkdir -p {{.releasesDir}}
-      - npm pack --pack-destination {{.releasesDir}}
+      - mkdir -p {{.goTaskCli_releasesDir}}
+      - npm pack --pack-destination {{.goTaskCli_releasesDir}}
   run-tests:
     desc: run tests
     deps:
       - build-and-pack
       - init-tests-work-space
     cmds:
-      - cp -r ./tests/go-task-cli-test {{.testsWorkSpace}}/
+      - cp -r ./tests/goTaskCli_test {{.goTaskCli_testsWorkSpace}}/
       - task: run-tests-body
 
   run-tests-body:
     internal: true
-    dir: '{{.testsWorkSpace}}/go-task-cli-test'
+    silent: true
+    dir: '{{.goTaskCli_testsWorkSpace}}/goTaskCli_test'
     cmds:
       - npm install
-      - npm install --save-dev "{{.packageTarGz}}"
+      - npm install --save-dev "{{.goTaskCli_packageTarGz}}"
   init-tests-work-space:
     internal: true
+    silent: true
     cmds:
-      - rm -rf {{.testsWorkSpace}}
-      - mkdir -p {{.testsWorkSpace}}
+      - rm -rf {{.goTaskCli_testsWorkSpace}}
+      - mkdir -p {{.goTaskCli_testsWorkSpace}}
 
-includes:
-  # NOTE: 変数を最後に include することで、他の include に変数空間を壊されないようにする
-  vars:
-    taskfile: ./Taskfile.vars.yml
+# NOTE: vars cannot be defined locally
+vars:
+  goTaskCli_releasesDir: './releases'
+  goTaskCli_testsWorkSpace: './tests-work-space'
+  goTaskCli_packageJsonText:
+    sh: cat ./package.json
+  goTaskCli_packageVersion: '{{(mustFromJson .goTaskCli_packageJsonText).version}}'
+  goTaskCli_packageTarGz: '{{.TASKFILE_DIR}}/{{.goTaskCli_releasesDir}}/ryusuke410-go-task-cli-{{.goTaskCli_packageVersion}}.tgz'

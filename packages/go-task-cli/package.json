@@ -2,6 +2,7 @@
   "name": "@ryusuke410/go-task-cli",
   "version": "3.40.1",
   "description": "This package installs Task (Taskfile) locally.",
+  "private": true,
   "scripts": {
     "postinstall": "node scripts/init.cjs"
   },

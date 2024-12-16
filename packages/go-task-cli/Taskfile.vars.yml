@@ -1,9 +1,0 @@
-version: '3'
-
-vars:
-  releasesDir: './releases'
-  testsWorkSpace: './tests-work-space'
-  packageJsonText:
-    sh: cat ./package.json
-  packageVersion: '{{(mustFromJson .packageJsonText).version}}'
-  packageTarGz: '{{.TASKFILE_DIR}}/{{.releasesDir}}/ryusuke410-go-task-cli-{{.packageVersion}}.tgz'
