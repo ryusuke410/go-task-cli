@@ -17,19 +17,43 @@ tasks:
       - build
     cmds:
       - npm exec -- tsx scripts/pack.ts
+  build-and-pack-with-version:
+    desc: build and pack with specific version
+    preconditions:
+      - sh: test -n "{{.CLI_ARGS}}"
+        msg: "Error: No version provided"
+    deps:
+      - build
+    cmds:
+      - npm exec -- tsx scripts/pack.ts --version-override {{.CLI_ARGS}}
   run-tests:
     desc: run tests
     deps:
       - build-and-pack
       - init-tests-work-space
     cmds:
-      - cp -r ./tests/goTaskCli_test {{.goTaskCli_testsWorkSpace}}/
+      - cp -r ./tests/go-task-cli-test {{.goTaskCli_testsWorkSpace}}/
       - task: run-tests-body
+  publish:
+    desc: publish
+    deps:
+      - build
+    cmds:
+      - npm exec -- tsx scripts/publish.ts
+  publish-with-version:
+    desc: publish with specific version
+    preconditions:
+      - sh: test -n "{{.CLI_ARGS}}"
+        msg: "Error: No version provided"
+    deps:
+      - build
+    cmds:
+      - npm exec -- tsx scripts/publish.ts --version-override {{.CLI_ARGS}}
 
   run-tests-body:
     internal: true
     silent: true
-    dir: '{{.goTaskCli_testsWorkSpace}}/goTaskCli_test'
+    dir: '{{.goTaskCli_testsWorkSpace}}/go-task-cli-test'
     cmds:
       - npm install
       - npm install --save-dev "{{.goTaskCli_packageTarGz}}"

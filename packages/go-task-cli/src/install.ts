@@ -9,6 +9,7 @@ import { goArchOfNode, goOsOfNode } from "./go";
 import { TempDir } from "./temp-dir";
 import { hashSha256Verify } from "./hash";
 import { downloadFile } from "./download";
+import { removeGtcFromVersion } from "./version";
 
 const mainBare = async () => {
   const packageJsonPath = require.resolve(
@@ -19,7 +20,7 @@ const mainBare = async () => {
   ensureDirSync(binDir);
 
   const { version } = readPackageJson(packageJsonPath);
-  await installTaskBinary(version, binDir);
+  await installTaskBinary(removeGtcFromVersion(version), binDir);
 };
 
 const installTaskBinary = async (version: string, targetDir: string) => {
