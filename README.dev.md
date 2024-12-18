@@ -8,45 +8,51 @@ npm install --frozen-lockfile
 
 ## go-task-cli
 
-### build
+### build and link go-task-cli
 
 ```sh
 # build and pack
-(cd packages/go-task-cli/ && npx task build-and-pack)
+npx task cli:build-and-pack
 
 # build and pack with specific version
-(cd packages/go-task-cli/ && npx task build-and-pack-with-version -- 3.40.1-gtc.1)
+npx task cli:build-and-pack-with-version -- 3.40.1-gtc.2
+
+# link
+npx task cli:link
+
+# unlink
+npx task cli:unlink
 ```
 
 ### test
 
 ```sh
-(cd packages/go-task-cli/ && npx task run-tests)
+npx task cli:run-tests
 ```
 
 ### publish go-task-cli
 
 ```sh
 # publish
-(cd packages/go-task-cli/ && npx task publish)
+npx task cli:publish
 
 # publish with specific version
-(cd packages/go-task-cli/ && npx task publish-with-version -- 3.40.1-gtc.1)
+npx task cli:publish-with-version -- 3.40.1-gtc.2
 ```
 
 ## setup-go-task-cli
 
-### build and link
+### build and link setup-go-task-cli
 
 ```sh
 # build and pack
-(cd packages/setup-go-task-cli/ && npx task build-and-pack)
+npx task setup:build-and-pack
 
 # link
-(cd packages/setup-go-task-cli/ && npx task link)
+npx task setup:link
 
 # unlink
-(cd packages/setup-go-task-cli/ && npx task unlink)
+npx task setup:unlink
 ```
 
 After link you can test the package in some packages for test.
@@ -59,14 +65,14 @@ npx @ryusuke410/setup-go-task-cli
 ### update go task cli
 
 ```sh
-(cd packages/setup-go-task-cli/ && npx task update-go-task-cli)
+npx task setup:update-go-task-cli
 ```
 
 ### publish setup-go-task-cli
 
 ```sh
-(cd packages/setup-go-task-cli/ && npx task publish)
+npx task setup:publish
 
 # dry-run
-(cd packages/setup-go-task-cli/ && npx task publish-dry-run)
+npx task setup:publish-dry-run
 ```

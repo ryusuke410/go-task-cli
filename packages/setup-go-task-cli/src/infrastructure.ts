@@ -1,6 +1,7 @@
 import * as path from "node:path";
 
 import fs from "fs-extra";
+
 import { Service } from "./domain";
 
 const copyGoTaskCli = async (packagePath: string) => {
@@ -32,6 +33,18 @@ const updateRootPackageJson = async (packageName: string, packagePath: string, a
     return newDeps
   })();
   deps[packageName] = `file:${packagePath}`;
+  const trustedDeps = (() => {
+    const deps = packageJson.trustedDependencies;
+    if (deps !== undefined) {
+      return deps
+    }
+    const newDeps: unknown[] = [];
+    packageJson.trustedDependencies = newDeps;
+    return newDeps
+  })();
+  if (!trustedDeps.includes(packageName)) {
+    trustedDeps.push(packageName);
+  }
   await fs.writeJSON(packageJsonPath, packageJson, { spaces: 2 });
 }
 

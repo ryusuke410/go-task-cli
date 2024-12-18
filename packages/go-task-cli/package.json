@@ -1,6 +1,6 @@
 {
   "name": "@ryusuke410/go-task-cli",
-  "version": "3.40.1-gtc.1",
+  "version": "3.40.1-gtc.2",
   "description": "This package installs Task (Taskfile) locally.",
   "files": [
     "build"
@@ -31,5 +31,9 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "zod": "^3.24.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryusuke410/go-task-cli.git"
   }
 }
