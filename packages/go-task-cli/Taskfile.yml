@@ -31,9 +31,13 @@ tasks:
     deps:
       - build-and-pack
       - init-tests-work-space
+    vars:
+      testsWorkSpace: './tests-work-space'
     cmds:
-      - cp -r ./tests/go-task-cli-test {{.goTaskCli_testsWorkSpace}}/
+      - cp -r ./tests/go-task-cli-test {{.testsWorkSpace}}/
+      - cp -r ./tests/go-task-cli-test {{.testsWorkSpace}}/go-task-cli-test-bun
       - task: run-tests-body
+      - task: run-tests-body-bun
   publish:
     desc: publish
     deps:
@@ -49,26 +53,83 @@ tasks:
       - build
     cmds:
       - npm exec -- tsx scripts/publish.ts --version-override {{.CLI_ARGS}}
+  link:
+    desc: link this package
+    vars:
+      releasesDir: './releases'
+      packageJsonText:
+        sh: cat '{{.TASKFILE_DIR}}/package.json'
+      packageVersion: '{{(mustFromJson .packageJsonText).version}}'
+      packageTarGz: '{{.TASKFILE_DIR}}/{{.releasesDir}}/ryusuke410-go-task-cli-{{.packageVersion}}.tgz'
+    dir: '{{.releasesDir}}'
+    cmds:
+      - rm -rf package
+      - tar -xf {{.packageTarGz}}
+      - task: link-internal
+  unlink:
+    desc: unlink this package
+    vars:
+      releasesDir: './releases'
+    preconditions:
+      - sh: "[ -d '{{.releasesDir}}/package' ]"
+    cmds:
+      - task: unlink-internal
 
   run-tests-body:
     internal: true
     silent: true
-    dir: '{{.goTaskCli_testsWorkSpace}}/go-task-cli-test'
+    vars:
+      testsWorkSpace: './tests-work-space'
+      packageJsonText:
+        sh: cat '{{.TASKFILE_DIR}}/package.json'
+      packageVersion: '{{(mustFromJson .packageJsonText).version}}'
+      packageTarGz: '{{.TASKFILE_DIR}}/{{.releasesDir}}/ryusuke410-go-task-cli-{{.packageVersion}}.tgz'
+    dir: '{{.testsWorkSpace}}/go-task-cli-test'
     cmds:
       - npm install
-      - npm install --save-dev "{{.goTaskCli_packageTarGz}}"
+      - npm install --save-dev "{{.packageTarGz}}"
+      - npx task --version
+  run-tests-body-bun:
+    internal: true
+    silent: true
+    vars:
+      testsWorkSpace: './tests-work-space'
+      packageJsonText:
+        sh: cat '{{.TASKFILE_DIR}}/package.json'
+      packageVersion: '{{(mustFromJson .packageJsonText).version}}'
+      packageTarGz: '{{.TASKFILE_DIR}}/{{.releasesDir}}/ryusuke410-go-task-cli-{{.packageVersion}}.tgz'
+    dir: '{{.testsWorkSpace}}/go-task-cli-test-bun'
+    cmds:
+      - bun run --bun bun install
+      - bun run --bun bun add --dev "{{.packageTarGz}}"
+      - bun run --bun bun pm trust @ryusuke410/go-task-cli
+      - bun run --bun bun install
+      - bun run --bun bun run task --version
   init-tests-work-space:
     internal: true
     silent: true
+    vars:
+      testsWorkSpace: './tests-work-space'
     cmds:
-      - rm -rf {{.goTaskCli_testsWorkSpace}}
-      - mkdir -p {{.goTaskCli_testsWorkSpace}}
-
-# NOTE: vars cannot be defined locally
-vars:
-  goTaskCli_releasesDir: './releases'
-  goTaskCli_testsWorkSpace: './tests-work-space'
-  goTaskCli_packageJsonText:
-    sh: cat ./package.json
-  goTaskCli_packageVersion: '{{(mustFromJson .goTaskCli_packageJsonText).version}}'
-  goTaskCli_packageTarGz: '{{.TASKFILE_DIR}}/{{.goTaskCli_releasesDir}}/ryusuke410-go-task-cli-{{.goTaskCli_packageVersion}}.tgz'
+      - rm -rf {{.testsWorkSpace}}
+      - mkdir -p {{.testsWorkSpace}}
+  link-internal:
+    internal: true
+    silent: true
+    vars:
+      releasesDir: './releases'
+    dir: '{{.releasesDir}}/package'
+    cmds:
+      - npm unlink @ryusuke410/go-task-cli
+      - npm link @ryusuke410/go-task-cli
+      - bun unlink
+      - bun link
+  unlink-internal:
+    internal: true
+    silent: true
+    vars:
+      releasesDir: './releases'
+    dir: '{{.releasesDir}}/package'
+    cmds:
+      - npm unlink @ryusuke410/go-task-cli
+      - bun unlink

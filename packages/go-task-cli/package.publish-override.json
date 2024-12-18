@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "postinstall": "node build/install.js"
+    "postinstall": "./build/install.js"
   },
   "bin": {
     "task": "./bin/task.cjs"

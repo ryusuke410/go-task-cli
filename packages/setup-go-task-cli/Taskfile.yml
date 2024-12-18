@@ -13,11 +13,13 @@ tasks:
       - rm -rf ./build
   build-and-pack:
     desc: build and pack
+    vars:
+      releasesDir: './releases'
     deps:
       - build
     cmds:
-      - mkdir -p {{.setupGoTaskCli_releasesDir}}
-      - npm pack --pack-destination {{.setupGoTaskCli_releasesDir}}
+      - mkdir -p {{.releasesDir}}
+      - npm pack --pack-destination {{.releasesDir}}
   update-go-task-cli:
     desc: update go-task-cli
     cmds:
@@ -25,18 +27,27 @@ tasks:
       - task: go-task-cli:build-and-pack
       - task: unpack
       - cp go-task-cli/package.json src/go-task-cli-package.json
+      - npm exec -- tsx ./scripts/remove-gtc-from-go-task-cli-package.ts ./src/go-task-cli-package.json
       - cp override/* ./go-task-cli
   link:
     desc: link this package
-    dir: '{{.setupGoTaskCli_releasesDir}}'
+    vars:
+      releasesDir: './releases'
+      packageJsonText:
+        sh: cat '{{.TASKFILE_DIR}}/package.json'
+      packageVersion: '{{(mustFromJson .packageJsonText).version}}'
+      packageTarGz: '{{.TASKFILE_DIR}}/{{.releasesDir}}/ryusuke410-setup-go-task-cli-{{.packageVersion}}.tgz'
+    dir: '{{.releasesDir}}'
     cmds:
       - rm -rf package
-      - tar -xf {{.setupGoTaskCli_packageTarGz}}
+      - tar -xf {{.packageTarGz}}
       - task: link-internal
   unlink:
     desc: unlink this package
+    vars:
+      releasesDir: './releases'
     preconditions:
-      - sh: "[ -d '.{{.setupGoTaskCli_releasesDir}}/package' ]"
+      - sh: "[ -d '{{.releasesDir}}/package' ]"
     cmds:
       - task: unlink-internal
   publish-dry-run:
@@ -57,22 +68,30 @@ tasks:
   link-internal:
     internal: true
     silent: true
-    dir: '{{.setupGoTaskCli_releasesDir}}/package'
+    vars:
+      releasesDir: './releases'
+    dir: '{{.releasesDir}}/package'
     cmds:
-      - npm unlink
-      - npm link
+      - npm unlink @ryusuke410/setup-go-task-cli
+      - npm link @ryusuke410/setup-go-task-cli
   unlink-internal:
     internal: true
     silent: true
-    dir: '{{.setupGoTaskCli_releasesDir}}/package'
+    vars:
+      releasesDir: './releases'
+    dir: '{{.releasesDir}}/package'
     cmds:
-      - npm unlink
+      - npm unlink @ryusuke410/setup-go-task-cli
   publish-dry-run-internal:
     internal: false
     silent: true
     vars:
+      packageJsonText:
+        sh: cat '{{.TASKFILE_DIR}}/package.json'
+      packageVersion: '{{(mustFromJson .packageJsonText).version}}'
+      packageTarGz: '{{.TASKFILE_DIR}}/{{.releasesDir}}/ryusuke410-setup-go-task-cli-{{.packageVersion}}.tgz'
       fileList:
-        sh: echo -n "$(tar -tf "{{.setupGoTaskCli_packageTarGz}}")"
+        sh: echo -n "$(tar -tf "{{.packageTarGz}}")"
     indent: 4
     cmds:
       - echo '{{indent 4 .fileList}}'
@@ -82,11 +101,3 @@ includes:
     dir: ../go-task-cli
     taskfile: ../go-task-cli/Taskfile.yml
     internal: true
-
-# NOTE: vars cannot be defined locally
-vars:
-  setupGoTaskCli_releasesDir: './releases'
-  setupGoTaskCli_packageJsonText:
-    sh: cat ./package.json
-  setupGoTaskCli_packageVersion: '{{(mustFromJson .setupGoTaskCli_packageJsonText).version}}'
-  setupGoTaskCli_packageTarGz: '{{.TASKFILE_DIR}}/{{.setupGoTaskCli_releasesDir}}/ryusuke410-setup-go-task-cli-{{.setupGoTaskCli_packageVersion}}.tgz'

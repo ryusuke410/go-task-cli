@@ -4,7 +4,7 @@
   "description": "This package setup a package in your project to install Task (Taskfile) locally.",
   "private": true,
   "scripts": {
-    "postinstall": "node build/install.js"
+    "postinstall": "./build/install.js"
   },
   "bin": {
     "task": "./bin/task.cjs"

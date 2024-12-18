@@ -11,7 +11,8 @@
   "devDependencies": {
     "cspell": "^8.16.1",
     "lefthook": "^1.9.2",
-    "go-task-cli": "file:./dev-packages/go-task-cli"
+    "go-task-cli": "file:./dev-packages/go-task-cli",
+    "foo": "file:./foo"
   },
   "workspaces": [
     "packages/*"

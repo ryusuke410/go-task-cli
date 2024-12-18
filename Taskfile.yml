@@ -14,3 +14,7 @@ includes:
   cli:
     dir: ./packages/go-task-cli
     taskfile: ./packages/go-task-cli/Taskfile.yml
+  setup:
+    dir: ./packages/setup-go-task-cli
+    taskfile: ./packages/setup-go-task-cli/Taskfile.yml
+
